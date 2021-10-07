@@ -1,0 +1,264 @@
+{
+	"info": {
+		"_postman_id": "0044ba6c-1488-4f37-add7-2c16a5ecb503",
+		"name": "zss_collection",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "Login Token Generation",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"var jsonData = pm.response.json();",
+							"pm.environment.set(\"token\", jsonData.token);"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"username\"  : \"testdoc\",\n\"password\"  : \"Test123456\"\n}"
+				},
+				"url": {
+					"raw": "{{url}}/api-token-auth/gen/",
+					"host": [
+						"{{url}}"
+					],
+					"path": [
+						"api-token-auth",
+						"gen",
+						""
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Prescription Show",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Status code is 200\", function () {",
+							"    pm.response.to.have.status(200);",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "token {{token}}",
+						"type": "text"
+					}
+				],
+				"url": {
+					"raw": "{{url}}/api/prescriptions/",
+					"host": [
+						"{{url}}"
+					],
+					"path": [
+						"api",
+						"prescriptions",
+						""
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Prescription Create",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Status code is 201\", function () {",
+							"    pm.response.to.have.status(201);",
+							"});",
+							"var jsonD = pm.response.json();",
+							"pm.environment.set(\"prescription_id\", jsonD.id);"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "token {{token}}",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"patient\": 773,\n    \"additional_notes\": \"oindrila valo meye\",\n    \"prescribed_medicines\": [\n        {\n            \"medicine\": 1,\n            \"dosage_1\": 2,\n            \"dosage_2\": 2,\n            \"dosage_3\": 1,\n            \"duration\": 1,\n            \"meal_reliance\": 1\n        }\n    ],\n    \"medical_tests\": [1]\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{url}}/api/prescriptions/",
+					"host": [
+						"{{url}}"
+					],
+					"path": [
+						"api",
+						"prescriptions",
+						""
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Prescription Get",
+			"protocolProfileBehavior": {
+				"disableBodyPruning": true
+			},
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "token {{token}}",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{url}}/api/prescriptions/{{prescription_id}}/",
+					"host": [
+						"{{url}}"
+					],
+					"path": [
+						"api",
+						"prescriptions",
+						"{{prescription_id}}",
+						""
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Prescription Update",
+			"request": {
+				"method": "PUT",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "token {{token}}",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"patient\": 773,\n    \"additional_notes\": \"oindrila valo meye\",\n    \"prescribed_medicines\": [\n        {\n            \"medicine\": 1,\n            \"dosage_1\": 2,\n            \"dosage_2\": 2,\n            \"dosage_3\": 1,\n            \"duration\": 1,\n            \"meal_reliance\": 1\n        }\n    ],\n    \"medical_tests\": [1]\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{url}}/api/prescriptions/{{prescription_id}}/",
+					"host": [
+						"{{url}}"
+					],
+					"path": [
+						"api",
+						"prescriptions",
+						"{{prescription_id}}",
+						""
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Delete Prescription",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Status code is 204\", function () {",
+							"    pm.response.to.have.status(204);",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "DELETE",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "token {{token}}",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{url}}/api/prescriptions/{{prescription_id}}/?Authorization =token {{token}}",
+					"host": [
+						"{{url}}"
+					],
+					"path": [
+						"api",
+						"prescriptions",
+						"{{prescription_id}}",
+						""
+					],
+					"query": [
+						{
+							"key": "Authorization ",
+							"value": "token {{token}}"
+						}
+					]
+				}
+			},
+			"response": []
+		}
+	]
+}
